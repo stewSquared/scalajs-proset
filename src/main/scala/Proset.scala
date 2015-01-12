@@ -15,6 +15,10 @@ object Proset extends JSApp {
     jQuery("body").append(div(id:="game-table").render)
   }
 
+  def tearDownUI(): Unit = {
+    jQuery("#game-table").remove()
+  }
+
   def appendCard(card: Int): Unit = {
     jQuery("#game-table").append(
       div(cls:="card", id:=s"card-$card")(
