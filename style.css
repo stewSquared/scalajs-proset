@@ -1,0 +1,21 @@
+.game-table {
+    width: 100%; height: 100%; background: green; padding: 5em;
+}
+
+.card {
+    width: 10em; height: 14em;
+    margin: 1.25em; position: relative; float: left;
+    border-radius: .625em; background: white; border: solid black 1px;
+}
+
+.dot {
+    width: 2.5em; height: 2.5em; 
+    margin: -1.25em; border-radius: 50%; position: absolute;
+}
+
+.dot-1 { top:  3em; left: 3em; background: red; }
+.dot-2 { top:  7em; left: 3em; background: gold; }
+.dot-3 { top: 11em; left: 3em; background: blue; }
+.dot-4 { top:  3em; left: 7em; background: darkorange; }
+.dot-5 { top:  7em; left: 7em; background: lime; }
+.dot-6 { top: 11em; left: 7em; background: purple; }
