@@ -17,14 +17,8 @@ object Proset extends JSApp {
     jQuery("#game-table").remove()
   }
 
-  def insert(card: Int): Unit = {
-    jQuery("#game-table .slot :empty")
-      .first()
-      .append(View.card(card).render)
-  }
-
-  def appendCard(card: Int): Unit =
-    jQuery("#game-table").append(View.card(card).render)
+  def insert(card: Int): Unit =
+    jQuery("#game-table .slot:empty:first").append(View.card(card).render)
 
   def deal(): Unit = ???
 

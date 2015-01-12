@@ -18,11 +18,12 @@ object Tests extends TestSuite {
       assert(jQuery("#game-table .slot").length == 7)
       Proset.tearDownUI()
       assert(jQuery("#game-table").length == 0)
+      assert(jQuery("#game-table .slot").length == 0)
     }
 
     'Card63 (inFreshGame {
-      Proset.appendCard(63)
-      assert(jQuery("#game-table #card-63").length == 1)
+      Proset.insert(63)
+      assert(jQuery("#card-63").length == 1)
 
       for (n <- Proset.DOTS) {
         assert(jQuery(s"#game-table #card-63 .dot-$n").length == 1)
@@ -30,8 +31,8 @@ object Tests extends TestSuite {
     })
 
     'Card32 (inFreshGame {
-      Proset.appendCard(32)
-      assert(jQuery("#game-table #card-32").length == 1)
+      Proset.insert(32)
+      assert(jQuery("#card-32").length == 1)
       assert(jQuery(s"#game-table #card-32 .dot-1").length == 1)
       for (n <- 2 to 6) {
         assert(jQuery(s"#game-table #card-32 .dot-$n").length == 0)
@@ -39,8 +40,8 @@ object Tests extends TestSuite {
     })
 
     'Card1 (inFreshGame {
-      Proset.appendCard(1)
-      assert(jQuery("#game-table #card-1").length == 1)
+      Proset.insert(1)
+      assert(jQuery("#card-1").length == 1)
       for (n <- 1 to 5) {
         assert(jQuery(s"#game-table #card-1 .dot-$n").length == 0)
       }
@@ -54,8 +55,19 @@ object Tests extends TestSuite {
 
     'InsertCardIntoTable (inFreshGame{
       Proset.insert(63)
+      assert(jQuery(".card").length == 1)
       assert(jQuery("#card-63").length == 1)
       assert(jQuery("#game-table #slot-1 #card-63").length == 1)
+    })
+
+    'InsertMultipleCards (inFreshGame{
+      Proset.insert(63)
+      Proset.insert(32)
+      assert(jQuery("#game-table .slot .card").length == 2)
+      assert(jQuery("#game-table #slot-1 #card-63").length == 1)
+      assert(jQuery("#game-table #slot-2 .card").length == 1)
+      assert(jQuery("#card-32").length == 1)
+      assert(jQuery("#game-table #slot-3 .card").length == 0)
     })
 
     'Upcards {
