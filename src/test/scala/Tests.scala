@@ -52,7 +52,7 @@ object Tests extends TestSuite {
 
     'Dealing (inFreshGame{
       Proset.deal()
-      assert(jQuery("#game-table card").length == 7)
+      assert(jQuery("#game-table .card").length == 7)
     })
 
     'InsertCardIntoTable (inFreshGame{
