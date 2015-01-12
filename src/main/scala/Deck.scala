@@ -1,5 +1,15 @@
 class Deck(val cards: List[Int], numUpcards: Int) {
-  def upcards = cards.take(numUpcards)
+  def upcards = cards.take(numUpcards).toSet
+
+  def remove(chosen: Set[Int]) =
+    if ((chosen subsetOf upcards) && proset(chosen))
+      new Deck(cards diff (chosen.toList), numUpcards)
+    else
+      this
+
+  def isEmpty = upcards.size == 0
+
+  def proset(chosen: Set[Int]) = chosen.reduce(_ ^ _) == 0
 }
 
 object Deck {

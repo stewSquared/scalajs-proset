@@ -55,5 +55,16 @@ object Tests extends TestSuite {
       val d = Deck()
       assert(d.upcards.toSet.size == 7)
     }
+
+    'Removal {
+      val d = new Deck((1 to 7).toList, 4)
+      assert(d.upcards == Set(1,2,3,4))
+      assert(d.remove(Set(1,2,3)).upcards == Set(4,5,6,7))
+    }
+
+    'RemovalFailsWhenChosenAreNotProset {
+      val d = new Deck((1 to 7).toList, 4)
+      assert(d.remove(Set(2,3)).upcards == Set(1,2,3,4))
+    }
   }
 }
