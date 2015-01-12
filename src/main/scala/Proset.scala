@@ -17,7 +17,10 @@ object Proset extends JSApp {
 
   def appendCard(card: Int): Unit = {
     jQuery("#game-table").append(
-      div(cls:="card", id:="card-63")(
-        DOTS map (n => div(cls:=s"dot dot-$n")): _*).render)
+      div(cls:="card", id:=s"card-$card")(
+        ((DOTS zip f"${(card % 64).toBinaryString.toInt}%06d")
+          .filter{ case (_, bit) => bit == '1' }
+          .map{ case (num, _) => div(cls:=s"dot dot-$num") }
+        ): _*).render)
   }
 }
