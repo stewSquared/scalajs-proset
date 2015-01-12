@@ -6,8 +6,11 @@ object Tests extends TestSuite {
 
   def inFreshGame(tests: => Unit): Unit = {
     Proset.setupUI()
-    tests
-    Proset.tearDownUI()
+    try {
+      tests
+    } finally {
+      Proset.tearDownUI()
+    }
   }
 
   def tests = TestSuite {
@@ -18,7 +21,6 @@ object Tests extends TestSuite {
       assert(jQuery("#game-table .slot").length == 7)
       Proset.tearDownUI()
       assert(jQuery("#game-table").length == 0)
-      assert(jQuery("#game-table .slot").length == 0)
     }
 
     'Card63 (inFreshGame {

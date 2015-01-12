@@ -4,6 +4,7 @@ import org.scalajs.jquery.jQuery
 
 object Proset extends JSApp {
   val DOTS = 1 to 6
+  var deck = Deck()
 
   def main(): Unit = {
     jQuery(setupUI _)
@@ -20,7 +21,7 @@ object Proset extends JSApp {
   def insert(card: Int): Unit =
     jQuery("#game-table .slot:empty:first").append(View.card(card).render)
 
-  def deal(): Unit = ???
+  def deal(): Unit = deck.upcards.map(insert _)
 
   object View {
     import scalatags.Text.all._
