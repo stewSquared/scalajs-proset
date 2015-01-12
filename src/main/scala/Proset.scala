@@ -8,8 +8,11 @@ object Proset extends JSApp {
   val DOTS = 1 to 6
 
   def main(): Unit = {
+    jQuery(setupUI _)
+  }
+
+  def setupUI(): Unit = {
     jQuery("body").append(div(id:="game-table").render)
-    jQuery(appendCard _)
   }
 
   def appendCard(): Unit = {
