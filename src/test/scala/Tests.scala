@@ -11,5 +11,14 @@ object Tests extends TestSuite {
     'BoardExists {
       assert(jQuery("#game-table").length == 1)
     }
+
+    'Card63 {
+      Proset.appendCard(63)
+      assert(jQuery("#game-table #card-63").length == 1)
+
+      for (n <- Proset.DOTS) {
+        assert(jQuery(s"#game-table #card-63 .dot-$n").length == 1)
+      }
+    }
   }
 }

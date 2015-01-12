@@ -15,9 +15,9 @@ object Proset extends JSApp {
     jQuery("body").append(div(id:="game-table").render)
   }
 
-  def appendCard(): Unit = {
+  def appendCard(card: Int): Unit = {
     jQuery("#game-table").append(
-      div(cls:="card")(
+      div(cls:="card", id:="card-63")(
         DOTS map (n => div(cls:=s"dot dot-$n")): _*).render)
   }
 }
