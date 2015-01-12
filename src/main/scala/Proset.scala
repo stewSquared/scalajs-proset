@@ -20,11 +20,14 @@ object Proset extends JSApp {
   }
 
   def appendCard(card: Int): Unit = {
+    val bits = f"${(card % 64).toBinaryString.toInt}%06d" //TODO: hardcoded everything
     jQuery("#game-table").append(
       div(cls:="card", id:=s"card-$card")(
-        ((DOTS zip f"${(card % 64).toBinaryString.toInt}%06d")
+        ((DOTS zip bits)
           .filter{ case (_, bit) => bit == '1' }
           .map{ case (num, _) => div(cls:=s"dot dot-$num") }
         ): _*).render)
   }
+
+  def deal(): Unit = ???
 }

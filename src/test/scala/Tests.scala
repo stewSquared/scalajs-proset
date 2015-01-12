@@ -45,5 +45,15 @@ object Tests extends TestSuite {
       }
       assert(jQuery(s"#game-table #card-1 .dot-6").length == 1)
     })
+
+    'Dealing (inFreshGame{
+      Proset.deal()
+      assert(jQuery("#game-table card").length == 7)
+    })
+
+    'Upcards {
+      val d = Deck()
+      assert(d.upcards.toSet.size == 7)
+    }
   }
 }
