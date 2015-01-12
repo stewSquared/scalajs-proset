@@ -15,6 +15,7 @@ object Tests extends TestSuite {
       assert(jQuery("#game-table").length == 0)
       Proset.setupUI()
       assert(jQuery("#game-table").length == 1)
+      assert(jQuery("#game-table .slot").length == 7)
       Proset.tearDownUI()
       assert(jQuery("#game-table").length == 0)
     }
@@ -49,6 +50,12 @@ object Tests extends TestSuite {
     'Dealing (inFreshGame{
       Proset.deal()
       assert(jQuery("#game-table card").length == 7)
+    })
+
+    'InsertCardIntoTable (inFreshGame{
+      Proset.insert(63)
+      assert(jQuery("#card-63").length == 1)
+      assert(jQuery("#game-table #slot-1 #card-63").length == 1)
     })
 
     'Upcards {

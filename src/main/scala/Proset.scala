@@ -2,8 +2,6 @@ import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.jquery.jQuery
 
-import scalatags.Text.all._
-
 object Proset extends JSApp {
   val DOTS = 1 to 6
 
@@ -12,22 +10,38 @@ object Proset extends JSApp {
   }
 
   def setupUI(): Unit = {
-    jQuery("body").append(div(id:="game-table").render)
+    jQuery("body").append(View.gameTable.render)
   }
 
   def tearDownUI(): Unit = {
     jQuery("#game-table").remove()
   }
 
-  def appendCard(card: Int): Unit = {
-    val bits = f"${(card % 64).toBinaryString.toInt}%06d" //TODO: hardcoded everything
-    jQuery("#game-table").append(
-      div(cls:="card", id:=s"card-$card")(
+  def insert(card: Int): Unit = {
+    jQuery("#game-table .slot :empty")
+      .first()
+      .append(View.card(card).render)
+  }
+
+  def appendCard(card: Int): Unit =
+    jQuery("#game-table").append(View.card(card).render)
+
+  def deal(): Unit = ???
+
+  object View {
+    import scalatags.Text.all._
+
+    def gameTable =
+      div(id:="game-table")(
+        (1 to 7).map(n => div(cls:="slot", id:=s"slot-$n")): _*)
+
+    def card(num: Int) = {
+      val bits = f"${(num % 64).toBinaryString.toInt}%06d" //TODO: hardcoded everything
+      div(cls:="card", id:=s"card-$num")(
         ((DOTS zip bits)
           .filter{ case (_, bit) => bit == '1' }
           .map{ case (num, _) => div(cls:=s"dot dot-$num") }
-        ): _*).render)
+        ): _*)
+    }
   }
-
-  def deal(): Unit = ???
 }
