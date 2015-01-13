@@ -53,6 +53,7 @@ object Tests extends TestSuite {
     'Dealing (inFreshGame{
       Proset.deal()
       assert(jQuery("#game-table .card").length == 7)
+      assert(jQuery("#game-table .card-chosen").length == 0)
     })
 
     'InsertCardIntoTable (inFreshGame{
@@ -70,6 +71,27 @@ object Tests extends TestSuite {
       assert(jQuery("#game-table #slot-2 .card").length == 1)
       assert(jQuery("#card-32").length == 1)
       assert(jQuery("#game-table #slot-3 .card").length == 0)
+    })
+
+    'Select (inFreshGame{
+      Proset.deal()
+      Proset.select(1)
+      assert(jQuery("#game-table .card-chosen").length == 1)
+      Proset.select(1)
+      Proset.select(2)
+      assert(jQuery("#game-table .card-chosen").length == 2)
+      assert(jQuery("#game-table .card").length == 7)
+    })
+
+    'Deselect (inFreshGame{
+      Proset.deal()
+      Proset.select(1)
+      Proset.deselect(1)
+      assert(jQuery("#game-table .card-chosen").length == 0)
+      assert(jQuery("#game-table .card").length == 7)
+      Proset.deselect(2)
+      assert(jQuery("#game-table .card-chosen").length == 0)
+      assert(jQuery("#game-table .card").length == 7)
     })
 
     'Upcards {

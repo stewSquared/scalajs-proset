@@ -23,6 +23,14 @@ object Proset extends JSApp {
 
   def deal(): Unit = deck.upcards.map(insert _)
 
+  def select(slot: Int): Unit =
+    jQuery(s"#game-table #slot-$slot .card")
+      .attr("class", "card card-chosen")
+
+  def deselect(slot: Int): Unit =
+    jQuery(s"#game-table #slot-$slot .card")
+      .attr("class", "card")
+
   object View {
     import scalatags.Text.all._
 
