@@ -5,8 +5,12 @@
 .card {
     width: 10em; height: 14em;
     margin: 1.25em; position: relative; float: left;
-    border-radius: .625em; background: white; border: solid black 1px;
+    border-radius: .625em; background: white; border: outset darkgreen;
 }
+
+.card-chosen { border: inset darkgreen; }
+
+.card { border-width: 10px }
 
 .dot {
     width: 2.5em; height: 2.5em; 

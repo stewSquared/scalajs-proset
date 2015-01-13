@@ -8,10 +8,15 @@ object Proset extends JSApp {
 
   def main(): Unit = {
     jQuery(setupUI _)
+    jQuery(deal _)
   }
 
   def setupUI(): Unit = {
     jQuery("body").append(View.gameTable.render)
+    (1 to 7) foreach { n =>
+      jQuery(s"#slot-$n")
+        .click(toggle(n) _)
+    }
   }
 
   def tearDownUI(): Unit = {
@@ -23,9 +28,19 @@ object Proset extends JSApp {
 
   def deal(): Unit = deck.upcards.map(insert _)
 
-  def select(slot: Int): Unit =
+  @JSExport
+  def toggle(slot: Int)(): Unit = {
+    if (jQuery(s"#slot-$slot .card-chosen").length == 0) {
+      select(slot)
+    } else {
+      deselect(slot)
+    }
+  }
+
+  def select(slot: Int): Unit = {
     jQuery(s"#game-table #slot-$slot .card")
       .attr("class", "card card-chosen")
+  }
 
   def deselect(slot: Int): Unit =
     jQuery(s"#game-table #slot-$slot .card")
