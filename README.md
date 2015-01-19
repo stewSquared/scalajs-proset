@@ -9,3 +9,7 @@ A legal set is one such that there are an even number of every
 position of dot. Another way to think of it is that each card
 represents a number in binary. A proset is one that reduces to zero
 with XOR.
+
+Click a card to select/deselect. Double click the table to submit.
+If your submission is invalid, your cards will be deselected. Otherwise,
+new cards will appear as long as the deck is non-empty.

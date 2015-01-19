@@ -4,14 +4,13 @@ import org.scalajs.jquery.{jQuery => $}
 
 object Proset extends JSApp {
   val NUM_DOTS = 6
-  val DOTS = 1 to NUM_DOTS
   val SLOTS = 1 to NUM_DOTS+1
   val NUM_CARDS = math.pow(2,NUM_DOTS).toInt
 
   var deck = Deck(NUM_DOTS)
 
   def main(): Unit = {
-    $(setupUI _)
+    setupUI()
     $(deal _)
   }
 
@@ -77,9 +76,9 @@ object Proset extends JSApp {
       val bits = (card % NUM_CARDS).toBinaryString.reverse.take(NUM_DOTS)
       //val bits =  f"${(card % 64).toBinaryString.toInt}%06d".reverse
       div(cls:="card", id:=s"card-$card")(
-        ((DOTS zip bits)
-          .filter{ case (_, bit) => bit == '1' }
-          .map{ case (dot, _) => div(cls:=s"dot dot-$dot") }
+        (bits.zipWithIndex
+          .filter{ case (bit, _) => bit == '1' }
+          .map{ case (_, dot) => div(cls:=s"dot dot-$dot") }
         ): _*)
     }
   }
