@@ -13,9 +13,13 @@ object Tests extends TestSuite {
     }
   }
 
+  def cardDotsToBinary(card: String): String = (1 to 6)
+    .map(dot => jQuery(s"#game-table $card .dot-$dot").length.toString.head)
+    .mkString
+    .reverse
+
   def tests = TestSuite {
     'SetupTeardown {
-      assert(jQuery("#game-table").length == 0)
       Proset.setupUI()
       assert(jQuery("#game-table").length == 1)
       assert(jQuery("#game-table .slot").length == 7)
@@ -26,28 +30,19 @@ object Tests extends TestSuite {
     'Card63 (inFreshGame {
       Proset.insert(63)
       assert(jQuery("#card-63").length == 1)
-
-      for (n <- Proset.DOTS) {
-        assert(jQuery(s"#game-table #card-63 .dot-$n").length == 1)
-      }
+      assert(cardDotsToBinary("#card-63") == "111111")
     })
 
     'Card32 (inFreshGame {
       Proset.insert(32)
       assert(jQuery("#card-32").length == 1)
-      assert(jQuery(s"#game-table #card-32 .dot-1").length == 1)
-      for (n <- 2 to 6) {
-        assert(jQuery(s"#game-table #card-32 .dot-$n").length == 0)
-      }
+      assert(cardDotsToBinary("#card-32") == "100000")
     })
 
     'Card1 (inFreshGame {
       Proset.insert(1)
       assert(jQuery("#card-1").length == 1)
-      for (n <- 1 to 5) {
-        assert(jQuery(s"#game-table #card-1 .dot-$n").length == 0)
-      }
-      assert(jQuery(s"#game-table #card-1 .dot-6").length == 1)
+      assert(cardDotsToBinary("#card-1") == "000001")
     })
 
     'Dealing (inFreshGame{
@@ -95,7 +90,7 @@ object Tests extends TestSuite {
     })
 
     'Upcards {
-      val d = Deck()
+      val d = Deck(6)
       assert(d.upcards.toSet.size == 7)
     }
 
