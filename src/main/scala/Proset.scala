@@ -31,7 +31,9 @@ object Proset extends JSApp {
     .map(insert _)
 
   def insert(card: Int): Unit =
-    $("#game-table .slot:empty:first").append(View.card(card).render)
+    $("#game-table .slot")
+      .filter(":not(:has(.card))").first()
+      .prepend(View.card(card).render)
 
   @JSExport
   def toggle(slot: Int)(): Unit = {
@@ -60,7 +62,7 @@ object Proset extends JSApp {
       SLOTS foreach deselect
     } else {
       this.deck = newDeck
-      $(".card-chosen").remove()
+      $(".card-chosen").attr("class", "card-won")
       deal()
     }
   }

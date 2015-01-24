@@ -2,24 +2,31 @@
     width: 100%; height: 100%; background: green; padding: 4em;
 }
 
-.slot, .card {
+.slot, .card, .card-won {
     width: 10em; height: 14em;
 }
 
 .slot { 
-    margin: 1.25em;
+    margin: .25em;
     position: relative; display: inline-block;
 }
 
-.card {
+.card, .card-won {
     margin-left: -5em; margin-right: -5em;
     margin-top: -7em; margin-bottom: -7em;
-    position: relative; top: 50%; left: 50%;
+    display: inline-block; position: absolute; top: 50%; left: 50%;
     border-radius: .625em; background: white; border: solid black 2px;
     font-size: small;
+    transition: .25s;
 }
 
-.slot, .card-chosen { font-size: medium; }
+.slot, .card-chosen, .card-won { font-size: large; }
+
+.card-won {
+    opacity: 0;
+    transform: translateY(100%) scale(.8);
+    transition: .5s;
+}
 
 .dot {
     width: 2.5em; height: 2.5em; 
