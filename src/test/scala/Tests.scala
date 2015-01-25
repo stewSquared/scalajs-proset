@@ -15,8 +15,9 @@ object Tests extends TestSuite {
     }
   }
 
-  def cardDotsToBinary(card: String): String = (0 until 6)
-    .map(dot => jQuery(s"#game-table $card .dot-$dot").length.toString.head)
+  def cardDotsToBinary(card: String
+  )(implicit game: Proset): String = (0 until NUM_DOTS)
+    .map(dot => jQuery(game.gameTable).find(s"$card .dot-$dot").length.toString.head)
     .mkString
     .reverse
 
@@ -24,72 +25,70 @@ object Tests extends TestSuite {
     'SetupTeardown {
       val game = new Proset(NUM_DOTS)
       game.setupUI()
-      assert(jQuery("#game-table").length == 1)
-      assert(jQuery("#game-table .slot").length == 7)
+      assert(jQuery(game.gameTable).find(".slot").length == 7)
       game.tearDownUI()
-      assert(jQuery("#game-table").length == 0)
     }
 
-    'Card63 (inFreshGame { game =>
+    'Card63 (inFreshGame { implicit game =>
       game.insert(63)
       assert(jQuery("#card-63").length == 1)
       assert(cardDotsToBinary("#card-63") == "111111")
     })
 
-    'Card32 (inFreshGame { game =>
+    'Card32 (inFreshGame { implicit game =>
       game.insert(32)
       assert(jQuery("#card-32").length == 1)
       assert(cardDotsToBinary("#card-32") == "100000")
     })
 
-    'Card1 (inFreshGame { game =>
+    'Card1 (inFreshGame { implicit game =>
       game.insert(1)
       assert(jQuery("#card-1").length == 1)
       assert(cardDotsToBinary("#card-1") == "000001")
     })
 
-    'Dealing (inFreshGame { game =>
+    'Dealing (inFreshGame { implicit game =>
       game.deal()
-      assert(jQuery("#game-table .card").length == 7)
-      assert(jQuery("#game-table .card-chosen").length == 0)
+      assert(jQuery(game.gameTable).find(".card").length == 7)
+      assert(jQuery(game.gameTable).find(".card-chosen").length == 0)
     })
 
-    'InsertCardIntoTable (inFreshGame { game =>
+    'InsertCardIntoTable (inFreshGame { implicit game =>
       game.insert(63)
       assert(jQuery(".card").length == 1)
       assert(jQuery("#card-63").length == 1)
-      assert(jQuery("#game-table #slot-0 #card-63").length == 1)
+      assert(jQuery(game.slots(0)).find("#card-63").length == 1)
     })
 
-    'InsertMultipleCards (inFreshGame { game =>
+    'InsertMultipleCards (inFreshGame { implicit game =>
       game.insert(63)
       game.insert(32)
-      assert(jQuery("#game-table .slot .card").length == 2)
-      assert(jQuery("#game-table #slot-0 #card-63").length == 1)
-      assert(jQuery("#game-table #slot-1 .card").length == 1)
+      assert(jQuery(game.gameTable).find(".slot .card").length == 2)
+      assert(jQuery(game.slots(0)).find("#card-63").length == 1)
+      assert(jQuery(game.slots(1)).find(".card").length == 1)
       assert(jQuery("#card-32").length == 1)
-      assert(jQuery("#game-table #slot-2 .card").length == 0)
+      assert(jQuery(game.slots(2)).find(".card").length == 0)
     })
 
-    'Select (inFreshGame { game =>
+    'Select (inFreshGame { implicit game =>
       game.deal()
-      game.select(1)
-      assert(jQuery("#game-table .card-chosen").length == 1)
-      game.select(1)
-      game.select(2)
-      assert(jQuery("#game-table .card-chosen").length == 2)
-      assert(jQuery("#game-table .card").length == 7)
+      game.select(game.slots(1))
+      assert(jQuery(game.gameTable).find(".card-chosen").length == 1)
+      game.select(game.slots(1))
+      game.select(game.slots(2))
+      assert(jQuery(game.gameTable).find(".card-chosen").length == 2)
+      assert(jQuery(game.gameTable).find(".card").length == 7)
     })
 
-    'Deselect (inFreshGame { game =>
+    'Deselect (inFreshGame { implicit game =>
       game.deal()
-      game.select(1)
-      game.deselect(1)
-      assert(jQuery("#game-table .card-chosen").length == 0)
-      assert(jQuery("#game-table .card").length == 7)
-      game.deselect(2)
-      assert(jQuery("#game-table .card-chosen").length == 0)
-      assert(jQuery("#game-table .card").length == 7)
+      game.select(game.slots(1))
+      game.deselect(game.slots(1))
+      assert(jQuery(game.gameTable).find(".card-chosen").length == 0)
+      assert(jQuery(game.gameTable).find(".card").length == 7)
+      game.deselect(game.slots(2))
+      assert(jQuery(game.gameTable).find(".card-chosen").length == 0)
+      assert(jQuery(game.gameTable).find(".card").length == 7)
     })
 
     'Upcards {

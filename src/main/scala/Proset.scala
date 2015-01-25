@@ -1,9 +1,10 @@
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.jquery.{jQuery => $}
+import org.scalajs.dom.Element
 
 object Proset extends JSApp {
-  val NUM_DOTS = 6
+  val NUM_DOTS = 4
 
   def main(): Unit = {
     val game = new Proset(NUM_DOTS)
@@ -13,50 +14,53 @@ object Proset extends JSApp {
 }
 
 class Proset(numDots: Int) {
-  private val slots = 0 to numDots
-  private val numCards = math.pow(2,numDots).toInt
+  val numCards = math.pow(2,numDots).toInt
+  val gameTable = View.gameTable.render
+  val slots = Stream.continually(View.slot.render)
+    .take(numDots+1).toList
+
   private var deck = Deck(numDots)
 
   def setupUI(): Unit = {
-    $("body").append(View.gameTable.render)
-    $("#game-table")
-      .dblclick(submit _)
-    slots foreach { n =>
-      $(s"#slot-$n")
-        .click(toggle(n) _)
+    $("body").append(gameTable)
+    $(gameTable).dblclick(submit _)
+    slots.foreach{ slot => 
+      $(gameTable).append(slot)
+      $(slot).click(toggle(slot) _)
     }
   }
 
-  def tearDownUI(): Unit = $("#game-table").remove()
+  def tearDownUI(): Unit = $(gameTable).remove()
 
   def deal(): Unit = deck.upcards
     .filter(n => $(s"#card-$n").length == 0)
     .map(insert _)
 
   def insert(card: Int): Unit =
-    $("#game-table .slot")
-      .filter(":not(:has(.card))").first()
+    $(slots
+      .filter(s => $(s).find(".card").length == 0)
+      .head)
       .prepend(View.card(card).render)
 
   @JSExport
-  def toggle(slot: Int)(): Unit = {
-    if ($(s"#slot-$slot .card-chosen").length == 0) {
+  def toggle(slot: Element)(): Unit = {
+    if ($(slot).find(".card-chosen").length == 0) {
       select(slot)
     } else {
       deselect(slot)
     }
   }
 
-  def select(slot: Int): Unit =
-    $(s"#slot-$slot .card").attr("class", "card card-chosen")
+  def select(slot: Element): Unit =
+    $(slot).find(".card").attr("class", "card card-chosen")
       
-  def deselect(slot: Int): Unit =
-    $(s"#slot-$slot .card").attr("class", "card")
+  def deselect(slot: Element): Unit =
+    $(slot).find(".card").attr("class", "card")
 
   @JSExport
   def submit(): Unit = {
     val chosen: Set[Int] = slots
-      .map(n => $(s"#slot-$n .card-chosen"))
+      .map(s => $(s).find(".card-chosen"))
       .filter(_.length > 0)
       .map(_.attr("id").split('-').last.toInt)
       .toSet // NOTE: assumes .card number n has #card-n
@@ -71,11 +75,11 @@ class Proset(numDots: Int) {
   }
 
   object View {
-    import scalatags.Text.all._
+    import scalatags.JsDom.all._
 
-    def gameTable =
-      div(id:="game-table")(
-        slots.map(n => div(cls:="slot", id:=s"slot-$n")): _*)
+    def gameTable = div(cls:="game-table")
+
+    def slot = div(cls:="slot")
 
     def card(card: Int) = {
       val bits = (card % numCards).toBinaryString.reverse.take(numDots)
