@@ -13,7 +13,7 @@ object Tests extends TestSuite {
     }
   }
 
-  def cardDotsToBinary(card: String): String = (1 to 6)
+  def cardDotsToBinary(card: String): String = (0 until 6)
     .map(dot => jQuery(s"#game-table $card .dot-$dot").length.toString.head)
     .mkString
     .reverse
