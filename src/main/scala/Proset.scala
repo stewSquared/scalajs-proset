@@ -4,21 +4,24 @@ import org.scalajs.jquery.{jQuery => $}
 
 object Proset extends JSApp {
   val NUM_DOTS = 6
-  val SLOTS = 1 to NUM_DOTS+1
-  val NUM_CARDS = math.pow(2,NUM_DOTS).toInt
-
-  var deck = Deck(NUM_DOTS)
 
   def main(): Unit = {
-    setupUI()
-    $(deal _)
+    val game = new Proset(NUM_DOTS)
+    game.setupUI()
+    $(game.deal _)
   }
+}
+
+class Proset(numDots: Int) {
+  private val slots = 0 to numDots
+  private val numCards = math.pow(2,numDots).toInt
+  private var deck = Deck(numDots)
 
   def setupUI(): Unit = {
     $("body").append(View.gameTable.render)
     $("#game-table")
       .dblclick(submit _)
-    SLOTS foreach { n =>
+    slots foreach { n =>
       $(s"#slot-$n")
         .click(toggle(n) _)
     }
@@ -52,14 +55,14 @@ object Proset extends JSApp {
 
   @JSExport
   def submit(): Unit = {
-    val chosen: Set[Int] = SLOTS
+    val chosen: Set[Int] = slots
       .map(n => $(s"#slot-$n .card-chosen"))
       .filter(_.length > 0)
       .map(_.attr("id").split('-').last.toInt)
       .toSet // NOTE: assumes .card number n has #card-n
     val newDeck = deck.remove(chosen)
     if (newDeck.upcards == this.deck.upcards) {
-      SLOTS foreach deselect
+      slots foreach deselect
     } else {
       this.deck = newDeck
       $(".card-chosen").attr("class", "card-won")
@@ -72,10 +75,10 @@ object Proset extends JSApp {
 
     def gameTable =
       div(id:="game-table")(
-        SLOTS.map(n => div(cls:="slot", id:=s"slot-$n")): _*)
+        slots.map(n => div(cls:="slot", id:=s"slot-$n")): _*)
 
     def card(card: Int) = {
-      val bits = (card % NUM_CARDS).toBinaryString.reverse.take(NUM_DOTS)
+      val bits = (card % numCards).toBinaryString.reverse.take(numDots)
       //val bits =  f"${(card % 64).toBinaryString.toInt}%06d".reverse
       div(cls:="card", id:=s"card-$card")(
         (bits.zipWithIndex

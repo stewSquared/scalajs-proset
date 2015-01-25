@@ -3,13 +3,15 @@ import utest._
 import org.scalajs.jquery.jQuery
 
 object Tests extends TestSuite {
+  val NUM_DOTS = 6
 
-  def inFreshGame(tests: => Unit): Unit = {
-    Proset.setupUI()
+  def inFreshGame(tests: Proset => Unit): Unit = {
+    val game = new Proset(NUM_DOTS)
+    game.setupUI()
     try {
-      tests
+      tests(game)
     } finally {
-      Proset.tearDownUI()
+      game.tearDownUI()
     }
   }
 
@@ -20,71 +22,72 @@ object Tests extends TestSuite {
 
   def tests = TestSuite {
     'SetupTeardown {
-      Proset.setupUI()
+      val game = new Proset(NUM_DOTS)
+      game.setupUI()
       assert(jQuery("#game-table").length == 1)
       assert(jQuery("#game-table .slot").length == 7)
-      Proset.tearDownUI()
+      game.tearDownUI()
       assert(jQuery("#game-table").length == 0)
     }
 
-    'Card63 (inFreshGame {
-      Proset.insert(63)
+    'Card63 (inFreshGame { game =>
+      game.insert(63)
       assert(jQuery("#card-63").length == 1)
       assert(cardDotsToBinary("#card-63") == "111111")
     })
 
-    'Card32 (inFreshGame {
-      Proset.insert(32)
+    'Card32 (inFreshGame { game =>
+      game.insert(32)
       assert(jQuery("#card-32").length == 1)
       assert(cardDotsToBinary("#card-32") == "100000")
     })
 
-    'Card1 (inFreshGame {
-      Proset.insert(1)
+    'Card1 (inFreshGame { game =>
+      game.insert(1)
       assert(jQuery("#card-1").length == 1)
       assert(cardDotsToBinary("#card-1") == "000001")
     })
 
-    'Dealing (inFreshGame{
-      Proset.deal()
+    'Dealing (inFreshGame { game =>
+      game.deal()
       assert(jQuery("#game-table .card").length == 7)
       assert(jQuery("#game-table .card-chosen").length == 0)
     })
 
-    'InsertCardIntoTable (inFreshGame{
-      Proset.insert(63)
+    'InsertCardIntoTable (inFreshGame { game =>
+      game.insert(63)
       assert(jQuery(".card").length == 1)
       assert(jQuery("#card-63").length == 1)
-      assert(jQuery("#game-table #slot-1 #card-63").length == 1)
+      assert(jQuery("#game-table #slot-0 #card-63").length == 1)
     })
 
-    'InsertMultipleCards (inFreshGame{
-      Proset.insert(63)
-      Proset.insert(32)
+    'InsertMultipleCards (inFreshGame { game =>
+      game.insert(63)
+      game.insert(32)
       assert(jQuery("#game-table .slot .card").length == 2)
-      assert(jQuery("#game-table #slot-1 #card-63").length == 1)
-      assert(jQuery("#game-table #slot-2 .card").length == 1)
+      assert(jQuery("#game-table #slot-0 #card-63").length == 1)
+      assert(jQuery("#game-table #slot-1 .card").length == 1)
       assert(jQuery("#card-32").length == 1)
-      assert(jQuery("#game-table #slot-3 .card").length == 0)
+      assert(jQuery("#game-table #slot-2 .card").length == 0)
     })
 
-    'Select (inFreshGame{
-      Proset.deal()
-      Proset.select(1)
+    'Select (inFreshGame { game =>
+      game.deal()
+      game.select(1)
       assert(jQuery("#game-table .card-chosen").length == 1)
-      Proset.select(1)
-      Proset.select(2)
+      game.select(1)
+      game.select(2)
       assert(jQuery("#game-table .card-chosen").length == 2)
       assert(jQuery("#game-table .card").length == 7)
     })
 
-    'Deselect (inFreshGame{
-      Proset.deal()
-      Proset.select(1)
-      Proset.deselect(1)
+    'Deselect (inFreshGame { game =>
+      game.deal()
+      game.select(1)
+      game.deselect(1)
       assert(jQuery("#game-table .card-chosen").length == 0)
       assert(jQuery("#game-table .card").length == 7)
-      Proset.deselect(2)
+      game.deselect(2)
       assert(jQuery("#game-table .card-chosen").length == 0)
       assert(jQuery("#game-table .card").length == 7)
     })
